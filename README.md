@@ -44,13 +44,15 @@ after substituted components, fixing the previous `&f` rendering problem.
 MiniMessage formatting continues to work when `serializer: MINI_MESSAGE` is
 configured.
 
-**Message coverage:** Denied-action chat and actionbar messages and translated
-`/wgt` command responses use per-recipient expansion. WorldGuard handles
-entry/exit deny flags internally through different code paths; their default
-messages support legacy/hex formatting and *server-wide* PAPI placeholders
-during installation/reload, but not per-player expansions. Messages explicitly
-configured on WorldGuard regions are managed by WorldGuard itself and are
-not rewritten by this plugin.
+**Message coverage:** Denied-action chat/actionbar messages and translated
+`/wgt` command responses use per-recipient expansion. The fork also attempts
+to intercept WorldGuard's entry/exit movement denials and direct teleport
+denials to apply the same per-player rendering. These hooks patch WorldGuard
+methods in memory and depend on WorldGuard's internal method signatures. If
+a hook cannot be installed on your WorldGuard version, a warning is logged and
+normal WorldGuard behaviour remains active for that path. Messages explicitly
+configured on WorldGuard regions still originate from WorldGuard and are
+rendered when they flow through one of the hooked paths.
 
 ## Features
 - Extremely fast performance and lightweight
