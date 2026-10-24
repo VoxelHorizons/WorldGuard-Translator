@@ -62,7 +62,6 @@ public class TranslationManager {
     }
 
     public void setMemoryDenyMessage(String message) {
-        message = Text.get.colorize(message);
         Patcher.denyMessage(message);
     }
 
