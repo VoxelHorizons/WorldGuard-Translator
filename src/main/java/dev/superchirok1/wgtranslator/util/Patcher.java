@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import dev.superchirok1.wgtranslator.config.Configuration;
+import dev.superchirok1.wgtranslator.serializer.MessageFormatter;
 import dev.superchirok1.wgtranslator.translation.TranslationManager;
 import lombok.experimental.UtilityClass;
 import net.bytebuddy.ByteBuddy;
@@ -60,10 +61,11 @@ public class Patcher {
             message = WorldGuard.getInstance().getPlatform().getMatcher().replaceMacros(localPlayer, message);
             what = TranslationManager.getTranslation().components.get(what);
             message = message.replace("%what%", what);
+            Player player = BukkitAdapter.adapt(localPlayer);
+            message = MessageFormatter.format(player, message);
             if (Configuration.displayDenyMessage == Configuration.DisplayMode.DEFAULT) {
                 localPlayer.printRaw(message);
             } else {
-                Player player = BukkitAdapter.adapt(localPlayer);
                 player.sendActionBar(message);
             }
         }
