@@ -12,6 +12,7 @@ public class Configuration {
     public String language = "en";
     public String prefix = "&3&l[WG-Translator]&f";
     public boolean checkUpdates = true;
+    public boolean placeholderApiEnabled = true;
 
     public DisplayMode displayDenyMessage = DisplayMode.DEFAULT;
 
@@ -22,9 +23,10 @@ public class Configuration {
         FileConfiguration config = pluginModel.getConfig();
         serializer = Text.Type.valueOf(config.getString("serializer", serializer.toString()).toUpperCase());
         Text.init(serializer);
-        prefix = Text.get.colorize(config.getString("prefix", prefix));
+        prefix = config.getString("prefix", prefix);
         language = config.getString("lang", language.toLowerCase());
         checkUpdates = config.getBoolean("check_updates", checkUpdates);
+        placeholderApiEnabled = config.getBoolean("placeholderapi.enabled", true);
         displayDenyMessage = DisplayMode.valueOf(config.getString("display_mode.deny_message", displayDenyMessage.toString()));
         permissionAdmin = config.getString("permission.admin_command", permissionAdmin);
         permissionUpdateLog = config.getString("permission.update_log", permissionUpdateLog);
