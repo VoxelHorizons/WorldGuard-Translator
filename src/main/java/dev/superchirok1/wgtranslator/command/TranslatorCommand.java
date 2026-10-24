@@ -3,6 +3,7 @@ package dev.superchirok1.wgtranslator.command;
 import dev.superchirok1.wgtranslator.config.Configuration;
 import dev.superchirok1.wgtranslator.WorldGuardTranslator;
 import dev.superchirok1.wgtranslator.serializer.Text;
+import dev.superchirok1.wgtranslator.serializer.MessageFormatter;
 import dev.superchirok1.wgtranslator.serializer.impl.LegacyAmpersandSerializer;
 import dev.superchirok1.wgtranslator.translation.Translation;
 import dev.superchirok1.wgtranslator.translation.TranslationManager;
@@ -44,14 +45,14 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
             case "reload", "restart", "r": {
                 plugin.reload(sender.getName(), (time) -> {
-                    sender.sendMessage(String.format(messages.reloaded(), time));
+                    send(sender, String.format(messages.reloaded(), time));
                 });
                 return true;
             }
 
             case "denymessage", "dm": {
                 if (args.length < 3) {
-                    sender.sendMessage(messages.help().replace("%cmd%", label));
+                    send(sender, messages.help().replace("%cmd%", label));
                     return true;
                 }
 
@@ -59,20 +60,20 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                 switch (args[1].toLowerCase()) {
                     case "set" -> {
                         TranslationManager.setDenyMessage(msg);
-                        sender.sendMessage(messages.denyMessageInstalled());
+                        send(sender, messages.denyMessageInstalled());
                     }
                     case "settemp" -> {
                         TranslationManager.setMemoryDenyMessage(msg);
-                        sender.sendMessage(messages.denyMessageInstalledTemp());
+                        send(sender, messages.denyMessageInstalledTemp());
                     }
-                    default -> sender.sendMessage(messages.help().replace("%cmd%", label));
+                    default -> send(sender, messages.help().replace("%cmd%", label));
                 }
                 return true;
             }
 
             case "component": {
                 if (args.length < 2) {
-                    sender.sendMessage(messages.help().replace("%cmd%", label));
+                    send(sender, messages.help().replace("%cmd%", label));
                     return true;
                 }
 
@@ -81,19 +82,19 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                 switch (args[1].toLowerCase()) {
                     case "add", "set" -> {
                         if (args.length < 3) {
-                            sender.sendMessage(messages.componentUsage());
+                            send(sender, messages.componentUsage());
                             return true;
                         }
 
                         String msg = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                         if (msg.indexOf(';') == -1) {
-                            sender.sendMessage(messages.componentUsage());
+                            send(sender, messages.componentUsage());
                             return true;
                         }
 
                         String[] strings = msg.split(";", 2);
                         if (strings.length < 2) {
-                            sender.sendMessage(messages.componentUsage());
+                            send(sender, messages.componentUsage());
                             return true;
                         }
 
@@ -101,32 +102,32 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                         String value = strings[1].trim();
 
                         components.set(key, value);
-                        sender.sendMessage(String.format(messages.componentAdded(), key, value));
+                        send(sender, String.format(messages.componentAdded(), key, value));
                         return true;
                     }
 
                     case "remove" -> {
                         if (args.length < 3) {
-                            sender.sendMessage(messages.help().replace("%cmd%", label));
+                            send(sender, messages.help().replace("%cmd%", label));
                             return true;
                         }
 
                         String key = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                         if (!components.getMap().containsKey(key)) {
-                            sender.sendMessage(String.format(messages.componentRemoveIsNotContains(), key));
+                            send(sender, String.format(messages.componentRemoveIsNotContains(), key));
                             return true;
                         }
 
                         String value = components.get(key);
                         components.remove(key);
-                        sender.sendMessage(String.format(messages.componentRemoveRemoved(), key, value));
+                        send(sender, String.format(messages.componentRemoveRemoved(), key, value));
                         return true;
                     }
 
                     case "list" -> {
-                        sender.sendMessage(text.colorize(messages.componentListHeader()));
+                        send(sender, text.colorize(messages.componentListHeader()));
                         for (Map.Entry<String, String> map : components.getMap().entrySet()) {
-                            sender.sendMessage(
+                            send(sender, 
                                     messages.componentListFormat()
                                             .replace("{0}", map.getKey())
                                             .replace("{1}", map.getValue())
@@ -136,14 +137,14 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                     }
 
                     default -> {
-                        sender.sendMessage(messages.help().replace("%cmd%", label));
+                        send(sender, messages.help().replace("%cmd%", label));
                         return true;
                     }
                 }
             }
 
             case "help":
-                sender.sendMessage(messages.help().replace("%cmd%", label));
+                send(sender, messages.help().replace("%cmd%", label));
                 return true;
 
             default:
@@ -153,22 +154,27 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
 
 
     private boolean defaultMessage(CommandSender sender, boolean permission, String command) {
-        sender.sendMessage(" ");
-        sender.sendMessage(text.colorize("  &3&lWorldGuard-Translator &8• &7v" + plugin.getDescription().getVersion()));
-        sender.sendMessage(text.colorize("  &8• &fContributors: &b" + String.join(", ", plugin.getDescription().getAuthors())));
-        sender.sendMessage(text.colorize("  &8• &fTranslators: &b" + String.join(", ", plugin.getTranslators())));
+        send(sender, " ");
+        send(sender, text.colorize("  &3&lWorldGuard-Translator &8• &7v" + plugin.getDescription().getVersion()));
+        send(sender, text.colorize("  &8• &fContributors: &b" + String.join(", ", plugin.getDescription().getAuthors())));
+        send(sender, text.colorize("  &8• &fTranslators: &b" + String.join(", ", plugin.getTranslators())));
         TextComponent component = new TextComponent(text.colorize("  &8• &fRepository: "));
         TextComponent link = new TextComponent(text.colorize("&b&nGitHub (Click for open)&r"));
         link.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/SuperCHIROK1/WorldGuard-Translator"));
         link.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{new TextComponent(text.colorize("&3» &bhttps://github.com/SuperCHIROK1/WorldGuard-Translator"))}));
         component.addExtra(link);
         sender.spigot().sendMessage(component);
-        sender.sendMessage(" ");
+        send(sender, " ");
         if (permission) {
-            sender.sendMessage(text.colorize("  &8• &fHelp: &e/" + command + " help"));
-            sender.sendMessage(" ");
+            send(sender, text.colorize("  &8• &fHelp: &e/" + command + " help"));
+            send(sender, " ");
         }
         return true;
+    }
+
+    /** Render every configurable command response with the recipient's placeholders and colours. */
+    private void send(CommandSender sender, String message) {
+        sender.sendMessage(MessageFormatter.format(sender, message));
     }
 
     @Override

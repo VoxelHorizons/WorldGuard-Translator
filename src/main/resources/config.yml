@@ -18,6 +18,10 @@ prefix: "&#2bafb6&l[WG-Translator]&f"
 #: MINI_MESSAGE - Modern MiniMessage formatting (Paper 1.18+)
 #   Learn more about formatting here: https://docs.papermc.io/adventure/minimessage/format/
 serializer: LEGACY_AMPERSAND
+# Optional PlaceholderAPI integration for all translated messages (including WorldGuard denial messages).
+# When PlaceholderAPI is absent, placeholders remain unchanged and no dependency is required.
+placeholderapi:
+  enabled: true
 # Check for WorldGuard-Translator plugin updates.
 # If an update is available, the plugin will notify administrators in the console and chat.
 check_updates: true

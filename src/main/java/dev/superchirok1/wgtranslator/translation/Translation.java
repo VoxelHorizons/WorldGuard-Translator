@@ -16,9 +16,9 @@ public class Translation {
     private final File file;
 
     public Translation(YamlConfiguration config, File file) {
-        denyMessage = Text.get.colorize(config.getString("deny_message", "&#ff5400&l❌ Hey! &fSorry, but you can`t &#ff5400%what% &fhere!"));
-        entryDenyMessage = Text.get.colorize(config.getString("entry_deny_message", "&#ff5400&l❌ Hey! &fYou are not permitted to enter this area."));
-        exitDenyMessage = Text.get.colorize(config.getString("exit_deny_message", "&#ff5400&l❌ Hey! &fYou are not permitted to leave this area."));
+        denyMessage = config.getString("deny_message", "&#ff5400&l❌ Hey! &fSorry, but you can`t &#ff5400%what% &fhere!");
+        entryDenyMessage = config.getString("entry_deny_message", "&#ff5400&l❌ Hey! &fYou are not permitted to enter this area.");
+        exitDenyMessage = config.getString("exit_deny_message", "&#ff5400&l❌ Hey! &fYou are not permitted to leave this area.");
         this.config = config;
         this.file = file;
         components = new Components(this);
@@ -100,7 +100,7 @@ public class Translation {
         }
 
         private static String format(String message) {
-            return Text.get.colorize(message).replace("%prefix%", Configuration.prefix);
+            return message.replace("%prefix%", Configuration.prefix);
         }
     }
 }
