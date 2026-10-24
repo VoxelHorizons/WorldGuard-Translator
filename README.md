@@ -11,6 +11,47 @@ The easiest, fastest, and best way to translate and customize messages for the <
 
 ---
 
+## Optional PlaceholderAPI and colour codes
+
+The VoxelHorizons fork supports **optional** PlaceholderAPI expansion in translated
+messages. Add PlaceholderAPI to the server to activate this integration; no
+PlaceholderAPI expansion or separate configuration is needed for plain messages.
+Disable it when desired:
+
+```yaml
+# plugins/WorldGuard-Translator/config.yml
+placeholderapi:
+  enabled: true
+```
+
+For example, in `plugins/WorldGuard-Translator/translations/en.yml`:
+
+```yaml
+components:
+  "PvP": "&f%voxelcore_font_pvp% &cYou cannot PVP here. &fMaybe visit the &ePVP arena?"
+```
+
+When WorldGuard substitutes `%what%` with the `PvP` component, the plugin expands
+the recipient's PlaceholderAPI values (including VoxelCore font glyphs), then
+applies colour formatting. A missing PlaceholderAPI plugin leaves the original
+`%placeholder%` text unchanged and does not prevent WorldGuard-Translator
+from starting.
+
+Both the standard legacy codes (`&f`, `&c`, `&l`, `&r`,
+`&0`–`&9`) and hex colours (`&#ff5400`, `&<#ff5400>`) are supported,
+including colours returned by a placeholder expansion. Formatting is applied
+after substituted components, fixing the previous `&f` rendering problem.
+MiniMessage formatting continues to work when `serializer: MINI_MESSAGE` is
+configured.
+
+**Message coverage:** Denied-action chat and actionbar messages and translated
+`/wgt` command responses use per-recipient expansion. WorldGuard handles
+entry/exit deny flags internally through different code paths; their default
+messages support legacy/hex formatting and *server-wide* PAPI placeholders
+during installation/reload, but not per-player expansions. Messages explicitly
+configured on WorldGuard regions are managed by WorldGuard itself and are
+not rewritten by this plugin.
+
 ## Features
 - Extremely fast performance and lightweight
 - MiniMessage formatting support
