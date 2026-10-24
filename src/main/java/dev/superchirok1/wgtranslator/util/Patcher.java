@@ -72,9 +72,9 @@ public class Patcher {
     }
 
     private static void patchMessageCall(String className, String inMethod,
-                                         String callName, String replacementName, Class<?> receiverType) {
+                                         String callName, String replacementName, java.lang.Class<?> receiverType) {
         try {
-            Class<?> target = Class.forName(className);
+            java.lang.Class<?> target = java.lang.Class.forName(className);
             new ByteBuddy().redefine(target)
                     .visit(MemberSubstitution.relaxed()
                             .method(ElementMatchers.named(callName).and(ElementMatchers.takesArguments(String.class)))
