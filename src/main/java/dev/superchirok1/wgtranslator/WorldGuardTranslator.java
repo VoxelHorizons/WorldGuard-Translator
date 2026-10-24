@@ -74,6 +74,8 @@ public final class WorldGuardTranslator extends JavaPlugin {
 
         TranslationManager.loadTranslations(Configuration.language, (v) -> {
             Patcher.denyMessage(TranslationManager.getTranslation().denyMessage);
+            Patcher.entryDenyMessage(TranslationManager.getTranslation().entryDenyMessage);
+            Patcher.exitDenyMessage(TranslationManager.getTranslation().exitDenyMessage);
             long time = System.currentTimeMillis() - start;
             Logger.info("Reload completed in " + time + "ms");
             onComplete.accept(time);
