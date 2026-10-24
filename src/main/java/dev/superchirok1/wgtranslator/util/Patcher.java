@@ -34,11 +34,13 @@ public class Patcher {
     }
 
     public void entryDenyMessage(String message) {
-        processStringFlag(Flags.ENTRY_DENY_MESSAGE, message);
+        // WorldGuard's movement handler sends these defaults itself. Render server-wide
+        // placeholders and colour codes when installing the flag value.
+        processStringFlag(Flags.ENTRY_DENY_MESSAGE, MessageFormatter.format(null, message));
     }
 
     public void exitDenyMessage(String message) {
-        processStringFlag(Flags.EXIT_DENY_MESSAGE, message);
+        processStringFlag(Flags.EXIT_DENY_MESSAGE, MessageFormatter.format(null, message));
     }
 
     public void patchListenerMethod() {
