@@ -5,6 +5,7 @@ version: '${project.version}'
 main: dev.superchirok1.wgtranslator.WorldGuardTranslator
 api-version: '1.16'
 depend: [WorldGuard]
+softdepend: [PlaceholderAPI]
 authors:
   - SuperCHIROK1
 libraries:
