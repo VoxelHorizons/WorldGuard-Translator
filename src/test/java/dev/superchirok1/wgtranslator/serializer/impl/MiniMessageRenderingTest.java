@@ -72,8 +72,8 @@ class MiniMessageRenderingTest {
 
     @Test
     void normalizerRewritesOnlyValidLegacySequences() {
-        assertEquals("Example &z stays &not-colour",
-                LegacyMiniMessageConverter.normalize("Example &z stays &not-colour"));
+        assertEquals("Example &z stays &q-not-colour",
+                LegacyMiniMessageConverter.normalize("Example &z stays &q-not-colour"));
         assertEquals("<reset><white><reset><white>\uE123 <reset><red>No PVP",
                 LegacyMiniMessageConverter.normalize("&f\u00a7f\uE123 &cNo PVP"));
         assertNull(serializer.colorize(null));
