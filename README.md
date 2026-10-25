@@ -42,7 +42,17 @@ Both the standard legacy codes (`&f`, `&c`, `&l`, `&r`,
 including colours returned by a placeholder expansion. Formatting is applied
 after substituted components, fixing the previous `&f` rendering problem.
 MiniMessage formatting continues to work when `serializer: MINI_MESSAGE` is
-configured.
+configured. In that mode, both `&` codes from translation templates and `§`
+codes returned by PlaceholderAPI are converted to MiniMessage tags **before**
+the MiniMessage parser runs. This avoids the MiniMessage legacy-code exception
+on Paper/WorldGuard deny events. RGB codes such as `&#ff5400`,
+`&<#ff5400>`, and `§x§f§f§5§4§0§0` retain their full colours.
+
+For mixed formatting, leave `serializer: MINI_MESSAGE` enabled and write, for
+example, `"&f%voxelcore_font_pvp% &cYou cannot PVP here."`. The VoxelCore
+glyph placeholder may return `§f` plus its private-use glyph; no change is
+needed in VoxelCore or the resource pack. `LEGACY_AMPERSAND` remains
+supported unchanged.
 
 **Message coverage:** Denied-action chat/actionbar messages and translated
 `/wgt` command responses use per-recipient expansion. The fork also attempts
